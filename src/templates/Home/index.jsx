@@ -1,10 +1,10 @@
 import { Component } from 'react'
 
-import './styles.css'
-
 import { Button } from '../../components/Button';
 import { Posts } from '../../components/Posts';
 import { loadPosts } from '../../functions/load.posts'
+
+import './styles.css'
 
 
 class Home extends Component {
@@ -12,7 +12,7 @@ class Home extends Component {
     posts: [],
     allPosts: [],
     page: 0,
-    postsPerPage: 2
+    postsPerPage: 10
   };
 
   async componentDidMount() {
@@ -44,13 +44,18 @@ class Home extends Component {
   }
 
   render() {
-    const { posts } = this.state;
+    const { posts, page, postsPerPage, allPosts } = this.state;
+    const noMorePosts = page + postsPerPage >= allPosts.length
+
     return (
       <section className='container'>
         <Posts posts={posts} />
-        <Button text='Load More Posts'
-          onClick={this.loadMorePosts}
-        />
+        <div className='button-container'>
+          <Button text='Load More'
+            onClick={this.loadMorePosts}
+            disabled={noMorePosts}
+          />
+        </div>
       </section>
     );
   }

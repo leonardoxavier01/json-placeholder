@@ -12,7 +12,8 @@ class Home extends Component {
     posts: [],
     allPosts: [],
     page: 0,
-    postsPerPage: 10
+    postsPerPage: 10,
+    searchValue: ''
   };
 
   async componentDidMount() {
@@ -43,18 +44,52 @@ class Home extends Component {
     this.setState({ posts, page: nextPage });
   }
 
+  handleChange = (e) => {
+    const { value } = e.target;
+    this.setState({ searchValue: value });
+  }
+
   render() {
-    const { posts, page, postsPerPage, allPosts } = this.state;
+    const { posts, page, postsPerPage, allPosts, searchValue } = this.state;
     const noMorePosts = page + postsPerPage >= allPosts.length
+
+    const filterPosts = !!searchValue ?
+      allPosts.filter(post => {
+        return post.title.toLowerCase().includes(
+          searchValue.toLowerCase()
+        );
+      })
+      : posts;
 
     return (
       <section className='container'>
-        <Posts posts={posts} />
+        {!!searchValue && (
+          <>
+            <h1>Search value: {searchValue}</h1> <br />
+            <br />
+          </>
+        )}
+
+        <input
+          onChange={this.handleChange}
+          value={searchValue}
+          type="search" />
+
+        {filterPosts.length > 0 && (
+          <Posts posts={filterPosts} />
+        )}
+
+        {filterPosts.length  === 0 && (
+          <p>Nenhum resultado encontrado</p>
+        )}
+        
         <div className='button-container'>
-          <Button text='Load More'
-            onClick={this.loadMorePosts}
-            disabled={noMorePosts}
-          />
+          {!searchValue && (
+            <Button text='Load More'
+              onClick={this.loadMorePosts}
+              disabled={noMorePosts}
+            />
+          )}
         </div>
       </section>
     );

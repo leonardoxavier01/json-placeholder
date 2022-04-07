@@ -2,6 +2,7 @@ import { Component } from 'react'
 
 import { Button } from '../../components/Button';
 import { Posts } from '../../components/Posts';
+import { TextInput } from '../../components/TextInput';
 import { loadPosts } from '../../functions/load.posts'
 
 import './styles.css'
@@ -63,26 +64,19 @@ class Home extends Component {
 
     return (
       <section className='container'>
-        {!!searchValue && (
-          <>
-            <h1>Search value: {searchValue}</h1> <br />
-            <br />
-          </>
-        )}
-
-        <input
-          onChange={this.handleChange}
-          value={searchValue}
-          type="search" />
-
+        <div className='search-container'>
+          {!!searchValue && (
+            <h1>Search value: {searchValue}</h1>
+          )}
+          <TextInput handleChange={this.handleChange} searchValue={searchValue}
+          />
+        </div>
         {filterPosts.length > 0 && (
           <Posts posts={filterPosts} />
         )}
-
-        {filterPosts.length  === 0 && (
+        {filterPosts.length === 0 && (
           <p>Nenhum resultado encontrado</p>
         )}
-        
         <div className='button-container'>
           {!searchValue && (
             <Button text='Load More'
